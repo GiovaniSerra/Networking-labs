@@ -1,18 +1,18 @@
-# VLAN – Configuração Básica
+## VLAN – Configuração Básica
 
-## 🎯 Objetivo
+## Objetivo
 Criar VLANs e atribuir portas de acesso
 para segmentação de rede.
 
-## 🧠 Conceitos
+## Conceitos
 - VLAN
 - Access Ports
 - Broadcast Domain
 
-## ⚙️ Configuração
+## Configuração
 - VLAN 10 – Users
 - VLAN 20 – Admin
 
-## ✅ Resultado
+## Resultado
 Hosts em VLANs diferentes não se comunicam.
 
