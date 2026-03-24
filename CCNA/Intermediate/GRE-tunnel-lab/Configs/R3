@@ -1,1 +1,29 @@
 
+hostname R3
+!
+interface Loopback3
+ ip address 3.3.3.3 255.255.255.0
+!
+interface Tunnel1
+ ip address 13.13.13.3 255.255.255.0
+ tunnel source FastEthernet1/0
+ tunnel destination 12.12.12.1
+!
+interface FastEthernet0/0
+ no ip address
+ shutdown
+ duplex full
+!
+interface FastEthernet1/0
+ ip address 23.23.23.3 255.255.255.0
+ duplex full
+!
+router ospf 1
+ network 23.23.23.0 0.0.0.255 area 0
+!
+ip route 1.1.1.1 255.255.255.255 Tunnel1
+!
+line con 0
+ logging synchronous
+!
+end
