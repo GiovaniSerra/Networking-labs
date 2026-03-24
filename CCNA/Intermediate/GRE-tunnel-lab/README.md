@@ -5,6 +5,8 @@ This lab demonstrates the implementation of a GRE (Generic Routing Encapsulation
 The goal is to enable communication between loopback interfaces using an overlay tunnel while traffic physically traverses an intermediate router (R2).
 
 ## Topology
+![image alt](https://github.com/GiovaniSerra/Networking-labs/blob/main/CCNA/Intermediate/GRE-tunnel-lab/gre-lab.PNG?raw=true)
+
 Underlay: R1 --- R2 --- R3 (OSPF Area 0)
 Overlay: GRE Tunnel between R1 and R3
 Loopbacks simulate remote networks:
@@ -65,18 +67,32 @@ Success rate is 100 percent (5/5)
 
 
 ## Traceroute (Overlay Path)
-R1# traceroute 3.3.3.3
- 1 13.13.13.3
+R1#traceroute 3.3.3.3 source 1.1.1.1
+Type escape sequence to abort.
+Tracing the route to 3.3.3.3
+VRF info: (vrf in name/id, vrf out name/id)
+  1 13.13.13.3 24 msec 32 msec *
 
-This confirms that traffic is forwarded through the GRE tunnel rather than the physical path via R2.
+## Packet-Level Validation (Wireshark)
+![image alt](https://github.com/GiovaniSerra/Networking-labs/blob/main/CCNA/Intermediate/GRE-tunnel-lab/Wireshark-GRE-lab.PNG?raw=true)
+
+##Analysis:
+Outer IP header:
+Source: 12.12.12.1
+Destination: 23.23.23.3
+Protocol: 47 (GRE)
+Inner IP packet:
+Source: 1.1.1.1
+Destination: 3.3.3.3
+
+##This confirms that:
+Traffic is encapsulated using GRE
+The underlay transports the packet between tunnel endpoints
+The original payload remains intact inside the tunnel
 
 CEF Validation
-R1# show ip cef 3.3.3.3
+R1#show ip cef 3.3.3.3
 3.3.3.3/32
-  attached to Tunnel1
-
-R3# show ip cef 1.1.1.1
-1.1.1.1/32
   attached to Tunnel1
 
 This shows that forwarding decisions use the tunnel interface.
