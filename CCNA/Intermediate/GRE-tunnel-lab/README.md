@@ -21,8 +21,8 @@ Loopbacks simulate remote networks:
 | R2     | Fa0/0      | 12.12.12.2/24  |
 | R2     | Fa1/0      | 23.23.23.2/24  |
 | R3     | Fa1/0      | 23.23.23.3/24  |
-| R1     | Loopback1  | 1.1.1.1/24     |
-| R3     | Loopback3  | 3.3.3.3/24     |
+| R1     | Loopback1  | 1.1.1.1/32     |
+| R3     | Loopback3  | 3.3.3.3/32     |
 | R1     | Tunnel1    | 13.13.13.1/24  |
 | R3     | Tunnel1    | 13.13.13.3/24  |
 
@@ -31,16 +31,22 @@ Loopbacks simulate remote networks:
 
 ### R1 (GRE Tunnel)
 interface Tunnel1
+
  ip address 13.13.13.1 255.255.255.0
+ 
  tunnel source FastEthernet0/0
+ 
  tunnel destination 23.23.23.3
 
 ip route 3.3.3.3 255.255.255.255 Tunnel1
 
 ### R3 (GRE Tunnel)
 interface Tunnel1
+
  ip address 13.13.13.3 255.255.255.0
+ 
  tunnel source FastEthernet1/0
+ 
  tunnel destination 12.12.12.1
 
 ip route 1.1.1.1 255.255.255.255 Tunnel1
