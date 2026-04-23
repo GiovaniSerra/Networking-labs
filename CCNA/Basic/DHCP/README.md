@@ -1,7 +1,7 @@
 # DHCP Basic Lab
 ## Overview
 
-This lab configures a Cisco router as a DHCP server and validates dynamic IP address assignment within a single broadcast domain.
+This lab configures a DHCP server and validates dynamic IP assignment within a single broadcast domain without relay agents.
 
 The goal is to validate DHCP functionality and understand the dynamic IP assignment process.
 
@@ -106,6 +106,8 @@ Packets 154–159 show the full DORA process using Transaction ID 0x16a8.
 
 ![image alt](https://github.com/GiovaniSerra/Networking-labs/blob/main/CCNA/Basic/DHCP/dhcp-dora-wireshark.png)
 
+All packets share the same Transaction ID, confirming they belong to the same DHCP exchange.
+
 The DHCP Discover is sent from 0.0.0.0 to 255.255.255.255 using UDP port 68 → 67, indicating the client does not yet have an IP address.
 
 ## DHCP DORA Sequence
@@ -127,7 +129,7 @@ All packets share the same Transaction ID, ensuring consistency in the DHCP exch
 
 ## Troubleshooting
 
-### If client does not receive IP:
- - Check interface status (no shutdown)
- - Verify DHCP pool network matches interface subnet
- - Ensure no overlapping excluded addresses
+- Ensure interfaces are up (no shutdown)
+- Verify DHCP pool network matches the interface subnet
+- Check if the client is configured for DHCP
+- Confirm excluded-address range does not block the pool
