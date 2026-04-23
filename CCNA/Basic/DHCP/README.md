@@ -1,7 +1,7 @@
 # DHCP Basic Lab
 ## Overview
 
-This lab demonstrates how to configure a Cisco router as a DHCP server and how a client obtains an IP address dynamically.
+This lab configures a Cisco router as a DHCP server and validates dynamic IP address assignment within a single broadcast domain.
 
 The goal is to validate DHCP functionality and understand the dynamic IP assignment process.
 
@@ -77,6 +77,8 @@ Verify that the client received a valid IP address from the 192.168.1.0/24 netwo
 
 ![image alt](https://github.com/GiovaniSerra/Networking-labs/blob/main/CCNA/Basic/DHCP/dhcp.png)
 
+The assigned IP address falls within the configured DHCP pool range (192.168.1.101–192.168.1.253), confirming that the excluded-address configuration is working as expected
+
 ## Connectivity Test
 
 ping 192.168.1.254
@@ -108,17 +110,24 @@ The DHCP Discover is sent from 0.0.0.0 to 255.255.255.255 using UDP port 68 → 
 
 ## DHCP DORA Sequence
 
-This capture highlights the complete DHCP DORA process between the client and the DHCP server.
+The capture shows the complete DHCP exchange using a single Transaction ID, confirming all packets belong to the same process.
 
-Discover
-The client broadcasts a request (0.0.0.0 → 255.255.255.255) to locate available DHCP servers
-Offer
-R1 responds with an available IP address from the configured pool
-Request
-The client requests the offered IP address, confirming its selection
-Acknowledge (ACK)
-The DHCP server finalizes the lease and assigns the IP configuration to the client
+### Discover
+The client sends a broadcast from 0.0.0.0 to 255.255.255.255 using UDP port 68 → 67, since it does not yet have an IP address
+### Offer
+R1 responds with an available IP address from the DHCP pool, including network parameters such as gateway and DNS
+### Request
+The client broadcasts a request to accept the offered IP address, informing all DHCP servers of its selection
+### Acknowledge (ACK)
+The DHCP server confirms the lease and finalizes the IP assignment
 
-All packets share the same Transaction ID, ensuring they belong to the same DHCP exchange.
+All packets share the same Transaction ID, ensuring consistency in the DHCP exchange. The process uses UDP ports 67 (server) and 68 (client), as defined for DHCP communication.
 
 ![image alt](https://github.com/GiovaniSerra/Networking-labs/blob/main/CCNA/Basic/DHCP/dora-sequence.png)
+
+## Troubleshooting
+
+### If client does not receive IP:
+ - Check interface status (no shutdown)
+ - Verify DHCP pool network matches interface subnet
+ - Ensure no overlapping excluded addresses
