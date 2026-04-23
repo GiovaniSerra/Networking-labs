@@ -31,31 +31,45 @@ Single broadcast domain environment.
 ### R1 (DHCP Server)
 
 enable
+
 configure terminal
+
 hostname R1
 
 interface fa0/0
+
  ip address 192.168.1.254 255.255.255.0
+ 
  no shutdown
 
 ip dhcp excluded-address 192.168.1.1 192.168.1.100
 
 ip dhcp pool DHCPLAB
+
  network 192.168.1.0 255.255.255.0
+ 
  default-router 192.168.1.254
+ 
  dns-server 8.8.8.8
+ 
  lease 7
+ 
 end
 
 ### PC1 (DHCP Client)
 
 enable
+
 configure terminal
+
 hostname PC1
 
 interface e0/1
+
  no switchport
+ 
  ip address dhcp
+ 
 end
 
 ## Verification
@@ -66,8 +80,8 @@ show ip dhcp binding
 
 ### Expected result:
 
-IP address assigned to the client
-MAC address associated with the lease
+- IP address assigned to the client
+- MAC address associated with the lease
 
 ![image alt](https://github.com/GiovaniSerra/Networking-labs/blob/main/CCNA/Basic/DHCP/ip%20dhcp%20binding.png)
 
@@ -94,13 +108,16 @@ Successful replies
 The DHCP process follows the DORA sequence:
 
 Discover
-The client broadcasts a request looking for a DHCP server
+- The client broadcasts a request looking for a DHCP server
+
 Offer
-The server responds with an available IP address
+- The server responds with an available IP address
+
 Request
-The client requests the offered IP
+- The client requests the offered IP
+
 Acknowledge
-The server confirms the assignment
+- The server confirms the assignment
 
 Packets 154–159 show the full DORA process using Transaction ID 0x16a8.
 
