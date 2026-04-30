@@ -222,12 +222,12 @@ show ip dhcp snooping binding
 ```
 ![image alt](https://github.com/GiovaniSerra/Networking-labs/blob/main/CCNA/Intermediate/DCHP-snooping-rogue-mitigation/sw2%20snooping%20bind.png)
 
-On R1:
+On R1 & ATTACKER:
 
 ```
 show ip dhcp binding
 ```
-![image alt](https://github.com/GiovaniSerra/Networking-labs/blob/main/CCNA/Intermediate/DCHP-snooping-rogue-mitigation/r1%20preview.png)
+![image alt](https://github.com/GiovaniSerra/Networking-labs/blob/main/CCNA/Intermediate/DCHP-snooping-rogue-mitigation/binding%20-%20r1%20e%20attacker.png)
 ---
 
 ## Important Consideration - DHCP Option 82
