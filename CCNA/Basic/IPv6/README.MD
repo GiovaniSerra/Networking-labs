@@ -53,6 +53,7 @@ This process automatically transforms a device's **48-bit physical MAC address**
 *   **Final EUI-64 Interface ID:** `0211:22FF:FEAA:BBCC`
 
 If combined with a local link prefix like `fe80::/64`, the final dynamically generated Link-Local address becomes: `fe80::211:22ff:feaa:bbcc`.
+
 ---
 
 ### 3. Types of IPv6 Addresses
