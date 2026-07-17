@@ -25,10 +25,10 @@ The most common ICMPv4 Type and Code combinations required for the CCNA blueprin
 
 ---
 
-### 3. ICMPv6: The Massive Protocol Evolution
-In IPv6 infrastructure, ICMPv6 (governed by **RFC 4443**) is much more than just an error-reporting utility. It underwent a massive architectural evolution, absorbing vital features that previously relied on separate legacy protocols in IPv4 (such as ARP and IGMP).
+### 3. ICMPv6: More Than Error Reporting
+In IPv6 infrastructure, ICMPv6 (governed by **RFC 4443**) is much more than just an error-reporting utility. Unlike ICMPv4, ICMPv6 incorporates additional functions that were previously handled by separate protocols such as ARP and IGMP.
 
-ICMPv6 powers two critical pillars of modern IPv6 operations:
+ICMPv6 provides two essential functions for IPv6 operation:
 
 #### A. Neighbor Discovery Protocol (NDP)
 NDP completely replaces the broadcast-heavy Address Resolution Protocol (ARP) used in IPv4. It maps known Layer 3 IPv6 addresses to local Layer 2 MAC addresses using efficient **Solicited-Node Multicast** streams:
@@ -45,10 +45,10 @@ As detailed in the IPv6 module, ICMPv6 allows client hosts to discover their def
 ### 4. Network Diagnostics: How Ping & Traceroute Work
 
 #### The Mechanics of Ping
-A standard `ping` utility executes a highly straightforward ICMP handshake. It transmits an **Echo Request** packet into the network and monitors the arrival of a matching **Echo Reply** from the destination host, calculating the Round-Trip Time (RTT) and packet loss metrics.
+A standard `ping` utility executes an ICMP handshake. It transmits an **Echo Request** packet into the network and monitors the arrival of a matching **Echo Reply** from the destination host, calculating the Round-Trip Time (RTT) and packet loss metrics.
 
 #### The Mechanics of Traceroute
-Traceroute is an ingenious diagnostic tool that maps the exact hop-by-hop path to a destination by intentionally exploiting the Layer 3 expiration mechanism (**Time Exceeded** messages):
+Traceroute maps the exact hop-by-hop path to a destination by intentionally exploiting the Layer 3 expiration mechanism (**Time Exceeded** messages):
 
 1.  Traceroute transmits the first packet with an IP **TTL (IPv4)** or **Hop Limit (IPv6)** explicitly set to **1**.
 2.  The first upstream router decrements the value to **0**, drops the packet, and transmits an **ICMP Time Exceeded** packet back to the source, revealing its own IP address.
@@ -60,6 +60,11 @@ Traceroute is an ingenious diagnostic tool that maps the exact hop-by-hop path t
 ### 5. 🛠️ Lab Experience & Packet Analysis (EVE-NG)
 
 To validate the behavioral differences between ICMPv4 and ICMPv6, I utilized a multi-router topology inside **EVE-NG** to capture diagnostic traffic under two distinct operation scenarios.
+
+#### Network Topology Diagram
+The diagram below illustrates the active local links, physical interface mapping, and the dual-stack addressing scheme utilized throughout the verification scenarios:
+
+![img network topology]()
 
 #### Scenario 1: Capturing a Routing Loop (ICMPv4 Time Exceeded)
 By intentionally misconfiguring static routes on two neighboring routers to point back at each other, I induced an artificial **Routing Loop** and executed a ping command. 
@@ -75,7 +80,7 @@ To witness how IPv6 replaces ARP, I cleared the local neighbor cache on a Cisco 
 
 ![img router cli sc1]()
 
-The resulting Wireshark capture beautifully displays the ICMPv6 Neighbor Discovery architecture in action, showing the initial Neighbor Solicitation packet mapping the link before the standard Echo exchange can take place:
+The resulting Wireshark capture confirms the ICMPv6 Neighbor Discovery architecture in action, showing the initial Neighbor Solicitation packet mapping the link before the standard Echo exchange can take place:
 
 ![img icmp wireshark sc2]()
 
@@ -109,6 +114,15 @@ For granular, real-time control plane tracking, debug utilities bypass standard 
 ![img router cli troubleshooting debug]()
 
 texto transcription
+
+---
+
+### 7. Key Takeaways
+
+- ICMP provides network-layer error reporting and diagnostic capabilities.
+- ICMPv6 extends beyond diagnostics by supporting Neighbor Discovery and SLAAC.
+- Routing loops can be quickly identified through repeated ICMP Time Exceeded messages.
+- Wireshark packet captures complement Cisco IOS troubleshooting commands by exposing protocol behavior at packet level.
 
 ---
 
