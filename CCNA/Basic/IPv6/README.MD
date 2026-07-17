@@ -24,8 +24,17 @@ To make these long addresses manageable, IPv6 uses two strict compression rules:
 
 #### Address Anatomy: Prefix vs. Interface ID
 A standard IPv6 unicast address is strictly divided into two equal parts of 64 bits each:
-1.  **Network Prefix (First 64 bits):** Assigned by the regional registry or ISP, used for routing packets to the correct network segment (similar to the network portion in IPv4).
+1.  **Network Prefix (First 64 bits):** Used for routing packets to the correct network segment (similar to the network portion in IPv4).
 2.  **Interface ID / Host Portion (Last 64 bits):** Uniquely identifies the specific interface on that local link segment.
+
+---
+
+##### Global Unicast Address (GUA) & The Subnetting Structure (48-16-64 Rule)
+The **Global Unicast Address (GUA)** is the IPv6 equivalent of a public IPv4 address. It is globally unique and publicly routable on the internet. In the current internet architecture, all GUAs are allocated from the block block starting with the binary `001`, which means they always start with the hexadecimal prefix **`2000::/3`** (ranging from `2000::` to `3FFF::`).
+
+For enterprise and corporate networks, a GUA is broken down into a rigid, highly efficient 3-part hierarchy defined by the **48-16-64 rule**:
+
+![img GUA]()
 
 ---
 
