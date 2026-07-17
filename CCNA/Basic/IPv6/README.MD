@@ -113,9 +113,31 @@ In IPv6, devices don't always need a traditional DHCP server to get an IP addres
 ### 8. Verification & Connectivity Testing
 
 ##### Testing Connectivity (Ping):
-When pinging a Global Unicast Address (GUA), a standard ping works normally. However, when pinging a Link-Local Address (LLA), the Cisco IOS requires you to specify the **output interface**, as LLAs are not routable and exist on multiple segments:
+When pinging a Global Unicast Address (GUA), a standard ping works normally because the router can look up the destination prefix in its global routing table. 
+
+However, because Link-Local Addresses (LLA) are not routable and the same `fe80::/10` prefix exists on *every* single IPv6 interface, the Cisco IOS does not know which physical link to use. If you attempt a standard ping to an LLA, it will fail with an IOS syntax error:
+
+##### Testing Connectivity (Scenario 1 - Ping Fails):
+
+![img ping erro]()
+
+Even after correcting the syntax by adding the output interface (output GigabitEthernet0/0), the ping command executes but results in a 0% success rate (.....). This happens because the neighbor router (Router2) has not yet been configured with IPv6, making its interface completely blind to this traffic.
+
+By capturing the link inside EVE-NG using Wireshark, we can visually confirm this Layer 3 failure: Router1 floods the wire with ICMPv6 Echo Request packets, but no ICMPv6 Echo Reply ever returns from the unconfigured neighbor.
+
+![img wireshark ping erro]()
+
+##### Testing Connectivity (Scenario 1 - Ping Fixed):
+
+To fix the environment, we access Router2 and initialize IPv6 on its link-facing interface using the ipv6 enable command (which automatically generates its Link-Local address fe80::2 via EUI-64) or by assigning it manually.
+
+Once Router2 becomes IPv6-aware, re-running the ping from Router1 now results in a flawless 100% success rate (!!!!!):
 
 ![img ping]()
+
+Checking our updated Wireshark capture confirms a healthy, active network state. The packet analyzer now beautifully displays the perfect pairing of every transmitted ICMPv6 Echo Request immediately followed by its corresponding ICMPv6 Echo Reply:
+
+![img wireshark ping certo]()
 
 ---
 
