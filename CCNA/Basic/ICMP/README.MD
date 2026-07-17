@@ -64,16 +64,51 @@ To validate the behavioral differences between ICMPv4 and ICMPv6, I utilized a m
 #### Scenario 1: Capturing a Routing Loop (ICMPv4 Time Exceeded)
 By intentionally misconfiguring static routes on two neighboring routers to point back at each other, I induced an artificial **Routing Loop** and executed a ping command. 
 
-![img icmp wireshark sc1]()
+![img router cli sc1]()
 
 Analyzing the traffic on Wireshark, we can witness the TTL dropping to zero as the packet bounces endlessly between the interfaces until the router drops it and transmits a flood of ICMP Type 11, Code 0 (Time Exceeded) alerts:
+
+![img icmp wireshark sc1]()
 
 #### Scenario 2: Analyzing IPv6 L2-to-L3 Mapping (ICMPv6 NDP)
 To witness how IPv6 replaces ARP, I cleared the local neighbor cache on a Cisco Router and executed a ping to a neighbor's Link-Local address.
 
-![img icmp wireshark sc2]()
+![img router cli sc1]()
 
 The resulting Wireshark capture beautifully displays the ICMPv6 Neighbor Discovery architecture in action, showing the initial Neighbor Solicitation packet mapping the link before the standard Echo exchange can take place:
+
+![img icmp wireshark sc2]()
+
+---
+
+### 6. 🔍 ICMP & ICMPv6 Troubleshooting Command Reference
+
+When diagnosing Layer 3 connectivity, routing loops, or neighbor mapping issues, Cisco IOS provides specific tools to isolate the problem. Below is an operational guide showcasing real CLI output alongside the corresponding syntax analysis.
+
+#### A. Diagnostic Utilities & Extended Verification
+To identify the exact router hop where a packet is being dropped or looping, we use specialized traceroute diagnostics. If the output shows the same upstream IP addresses repeating in a cyclical pattern, a routing loop is actively identified.
+
+![img router cli troubleshooting utilities]()
+
+texto transcription
+
+#### B. Layer 2 to Layer 3 Mapping Verification
+To inspect neighbor discovery and logical-to-physical address bindings, we check the standard ARP table for IPv4 and the NDP cache for IPv6. 
+
+In a healthy IPv6 topology, neighbor states display as `REACHABLE` or `STALE`. If a neighbor entry displays an `INCOMPLETE` state, it visually proves a Layer 3 communication failure: the local device is actively transmitting **Neighbor Solicitation (NS)** packets, but receiving absolutely no **Neighbor Advertisement (NA)** responses from the destination.
+
+![img router cli troubleshooting neighbors]()
+
+texto transcription
+
+#### C. Real-Time Control Plane Inspection (Debug)
+For granular, real-time control plane tracking, debug utilities bypass standard logging to output live console warnings the exact millisecond an ICMP packet traverses a local interface. This is highly effective for catching transitions or drop behaviors that standard show commands miss.
+
+> ⚠️ **Production Warning:** Debug engines disrupt process scheduling and heavily stress the router's CPU. Never run them blindly in a live enterprise network. Always execute `undebug all` (or the shortcut `un all`) immediately after capturing the required network events to prevent device degradation.
+
+![img router cli troubleshooting debug]()
+
+texto transcription
 
 ---
 
