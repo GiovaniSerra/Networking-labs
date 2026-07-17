@@ -71,7 +71,7 @@ By intentionally misconfiguring static routes on two neighboring routers to poin
 
 ![img router cli sc1]()
 
-Analyzing the traffic on Wireshark, we can witness the TTL dropping to zero as the packet bounces endlessly between the interfaces until the router drops it and transmits a flood of ICMP Type 11, Code 0 (Time Exceeded) alerts:
+Analyzing the traffic on Wireshark, the packet capture shows the TTL dropping to zero as the packet bounces endlessly between the interfaces until the router drops it and generates repeated ICMP Type 11 Code 0 messages:
 
 ![img icmp wireshark sc1]()
 
