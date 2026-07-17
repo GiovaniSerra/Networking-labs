@@ -61,14 +61,19 @@ Unlike IPv4, which relies heavily on broadcasts, IPv6 does not have broadcast ad
 
 *   **Unicast (One-to-One):** Uniquely identifies a single interface on an IPv6-enabled device.
     *   **Global Unicast Address (GUA):** Publicly routable on the internet (similar to public IPv4). Typically starts with the prefix `2000::/3`.
-    *   **Link-Local Address (LLA):** Required on every IPv6 interface. Used only for communication within the same local network segment (not routable). Automatically generated or manually configured; always starts with the prefix `fe80::/10`.
     *   **Unique Local Address (ULA):** Similar to private IPv4 addresses (RFC 1918). Used for internal routing within a site or company. Starts with the prefix `fc00::/7` (commonly `fd00::/8`).
     *   **Loopback Address:** Used by a host to send a packet to itself. Written as `::1/128`.
+    *   **Link-Local Address (LLA):** Required on every IPv6 interface. Used only for communication within the same local network segment (not routable). Always starts with the prefix `fe80::/10`. An LLA can be generated in two ways:
+        *   **Dynamic LLA (EUI-64 or Random):** Automatically created by the operating system the moment IPv6 is initialized on the interface (`ipv6 enable`). On Cisco IOS, it splits the interface's 48-bit MAC address, inserts `FFFE` in the middle, and flips the 7th bit to form the 64-bit Interface ID.
+            *   *Example:* `fe80::211:22ff:feaa:bbcc` (Hard to memorize, typically left on client hosts).
+        *   **Static/Manual LLA:** Manually configured by the administrator. Since LLAs only need to be unique *on that specific link*, you can safely reuse the exact same simple address across multiple different interfaces of the same router.
+            *   *Example:* `fe80::1` (Highly recommended for routers to serve as an easy-to-remember Default Gateway for clients).
+
 *   **Multicast (One-to-Many):** Used to send a single IPv6 packet to multiple destinations simultaneously. Always starts with the prefix `ff00::/8`.
     *   `ff02::1` -> All IPv6-enabled nodes on the link.
     *   `ff02::2` -> All IPv6 routers on the link.
-*   **Anycast (One-to-Nearest):** Assigned to multiple devices providing the same service. The network routes the packet to the nearest device configured with that address.
 
+*   **Anycast (One-to-Nearest):** Assigned to multiple devices providing the same service. The network routes the packet to the nearest device configured with that address.
 ---
 
 ### 4. IPv4 vs. IPv6 Comparison
