@@ -14,12 +14,36 @@ IPv6 drops the old dotted-decimal format in favor of a much larger, cleaner stru
 
 #### Address Compression Rules:
 To make these long addresses manageable, IPv6 uses two strict compression rules:
-1.  **Omit Leading Zeros:** Any leading zeros in a quartet can be dropped. (`0db8` becomes `db8`).
+1.  **Omit Leading Zeros:** Any leading zeros in a quartet can be dropped (`0db8` becomes `db8`).
 2.  **Double Colon (`::`):** A single contiguous string of all-zero quartets can be replaced with a double colon. *Note: This can only be done once per address to avoid ambiguity.*
 
 *   **Original:** `2001:0db8:0000:0000:0000:0000:1428:57ab`
 *   **Compressed:** `2001:db8::1428:57ab`
 
+---
+
+#### Address Anatomy: Prefix vs. Interface ID
+A standard IPv6 unicast address is strictly divided into two equal parts of 64 bits each:
+1.  **Network Prefix (First 64 bits):** Assigned by the regional registry or ISP, used for routing packets to the correct network segment (similar to the network portion in IPv4).
+2.  **Interface ID / Host Portion (Last 64 bits):** Uniquely identifies the specific interface on that local link segment.
+
+---
+
+#### Dynamic Host Generation: The EUI-64 Process
+When an interface dynamically generates its own Interface ID (such as during link-local initialization or SLAAC via `autoconfig`), Cisco devices typically use the **EUI-64 (Extended Unique Identifier)** standard. 
+
+This process automatically transforms a device's **48-bit physical MAC address** into a unique **64-bit IPv6 Interface ID** using a strict two-step mathematical rule:
+
+1.  **Split and Insert (`FFFE`):** The 48-bit MAC address is split directly in the middle (between the 24-bit OUI and the 24-bit Vendor portion), and the hexadecimal value `FFFE` is inserted to expand it to 64 bits.
+2.  **Flip the 7th Bit (U/L Bit):** The 7th bit of the first byte (Universal/Local bit) is inverted. If it is a `0`, it becomes a `1` (which is the most common scenario for burned-in corporate MAC addresses).
+
+##### EUI-64 Example:
+*   **Original MAC Address:** `00:11:22:AA:BB:CC`
+*   **Step 1 (Insert FFFE):** `0011:22` + `FFFE` + `AABB:CC` $\rightarrow$ `0011:22FF:FEAA:BBCC`
+*   **Step 2 (Flip 7th bit):** Binary `00000000` (hex `00`) becomes `00000010` (hex `02`).
+*   **Final EUI-64 Interface ID:** `0211:22FF:FEAA:BBCC`
+
+If combined with a local link prefix like `fe80::/64`, the final dynamically generated Link-Local address becomes: `fe80::211:22ff:feaa:bbcc`.
 ---
 
 ### 3. Types of IPv6 Addresses
